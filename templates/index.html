@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rainfall Prediction Tool</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(45deg, #6ab1d7, #33d9b2);
+            font-family: Arial, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        .card {
+            border: none;
+            border-radius: 15px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .card-header {
+            border-top-left-radius: 15px;
+            border-top-right-radius: 15px;
+        }
+        .btn-primary {
+            background-color: #33d9b2;
+            border-color: #33d9b2;
+        }
+        .btn-primary:hover {
+            background-color: #28a58c;
+            border-color: #28a58c;
+        }
+        .form-control {
+            border-radius: 10px;
+        }
+        .alert {
+            font-size: 1.2rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8 col-md-10">
+                <div class="card shadow-lg">
+                    <div class="card-header text-center bg-primary text-white">
+                        <h1><i class="fas fa-cloud-rain"></i> Rainfall Prediction Tool</h1>
+                    </div>
+                    <div class="card-body">
+                        <form method="POST" action="/" class="needs-validation" novalidate>
+                            <div class="form-row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="pressure"><i class="fas fa-tachometer-alt"></i> Pressure (hPa)</label>
+                                    <input type="number" class="form-control" id="pressure" name="pressure" placeholder="Enter pressure" required>
+                                    <div class="invalid-feedback">
+                                        Please provide a valid pressure.
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="maxtemp"><i class="fas fa-temperature-high"></i> Max Temperature (&#8451;)</label>
+                                    <input type="number" class="form-control" id="maxtemp" name="maxtemp" placeholder="Enter max temperature" required>
+                                    <div class="invalid-feedback">
+                                        Please provide a valid max temperature.
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="temperature"><i class="fas fa-thermometer-half"></i> Temperature (&#8451;)</label>
+                                    <input type="number" class="form-control" id="temperature" name="temperature" placeholder="Enter temperature" required>
+                                    <div class="invalid-feedback">
+                                        Please provide a valid temperature.
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="mintemp"><i class="fas fa-temperature-low"></i> Min Temperature (&#8451;)</label>
+                                    <input type="number" class="form-control" id="mintemp" name="mintemp" placeholder="Enter min temperature" required>
+                                    <div class="invalid-feedback">
+                                        Please provide a valid min temperature.
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="dewpoint"><i class="fas fa-tint"></i> Dew Point (&#8451;)</label>
+                                    <input type="number" class="form-control" id="dewpoint" name="dewpoint" placeholder="Enter dew point" required>
+                                    <div class="invalid-feedback">
+                                        Please provide a valid dew point.
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="humidity"><i class="fas fa-water"></i> Humidity (%)</label>
+                                    <input type="number" class="form-control" id="humidity" name="humidity" placeholder="Enter humidity" required>
+                                    <div class="invalid-feedback">
+                                        Please provide a valid humidity.
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="cloud"><i class="fas fa-cloud"></i> Cloud Cover (%)</label>
+                                    <input type="number" class="form-control" id="cloud" name="cloud" placeholder="Enter cloud cover" required>
+                                    <div class="invalid-feedback">
+                                        Please provide a valid cloud cover.
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="sunshine"><i class="fas fa-sun"></i> Sunshine (hours)</label>
+                                    <input type="number" class="form-control" id="sunshine" name="sunshine" placeholder="Enter sunshine hours" required>
+                                    <div class="invalid-feedback">
+                                        Please provide a valid sunshine duration.
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="winddirection"><i class="fas fa-compass"></i> Wind Direction (&#176;)</label>
+                                    <input type="number" class="form-control" id="winddirection" name="winddirection" placeholder="Enter wind direction" required>
+                                    <div class="invalid-feedback">
+                                        Please provide a valid wind direction.
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="windspeed"><i class="fas fa-wind"></i> Wind Speed (km/h)</label>
+                                    <input type="number" class="form-control" id="windspeed" name="windspeed" placeholder="Enter wind speed" required>
+                                    <div class="invalid-feedback">
+                                        Please provide a valid wind speed.
+                                    </div>
+                                </div>
+                            </div>
+                            <button class="btn btn-primary btn-block" type="submit"><i class="fas fa-cloud-showers-heavy"></i> Predict Rainfall</button>
+                        </form>
+                        {% if prediction %}
+                            <div class="alert alert-info mt-4 text-center" role="alert">
+                                <strong>Prediction:</strong> {{ prediction }}
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+        (function () {
+            'use strict';
+            window.addEventListener('load', function () {
+                var forms = document.getElementsByClassName('needs-validation');
+                Array.prototype.filter.call(forms, function (form) {
+                    form.addEventListener('submit', function (event) {
+                        if (form.checkValidity() === false) {
+                            event.preventDefault();
+                            event.stopPropagation();
+                        }
+                        form.classList.add('was-validated');
+                    }, false);
+                });
+            }, false);
+        })();
+    </script>
+</body>
+</html>

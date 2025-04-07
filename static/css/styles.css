@@ -1,0 +1,29 @@
+body {
+    background: url('../images/bg.jpg') no-repeat center center fixed;
+    background-color: #f8f9fa;
+}
+
+h1 {
+    color: #ffffff;
+}
+
+.card {
+    border: none;
+    border-radius: 10px;
+}
+
+.card-header {
+    border-radius: 10px 10px 0 0;
+}
+
+.form-control {
+    border-radius: 5px;
+}
+
+.btn {
+    border-radius: 5px;
+}
+
+.alert {
+    border-radius: 5px;
+}

@@ -4,151 +4,330 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Rainfall Prediction Tool</title>
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
+        :root {
+            --primary-color: #4facfe;
+            --secondary-color: #00f2fe;
+            --accent-color: #3a7bd5;
+            --dark-color: #1a2a6c;
+        }
+        
         body {
-            background: linear-gradient(45deg, #6ab1d7, #33d9b2);
-            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
             padding: 20px;
+            background-attachment: fixed;
+            overflow-x: hidden;
         }
+        
         .card {
             border: none;
-            border-radius: 15px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.25);
+        }
+        
         .card-header {
-            border-top-left-radius: 15px;
-            border-top-right-radius: 15px;
+            background: linear-gradient(to right, var(--accent-color), var(--dark-color));
+            color: white;
+            border-bottom: none;
+            padding: 1.5rem;
+            position: relative;
+            overflow: hidden;
         }
-        .btn-primary {
-            background-color: #33d9b2;
-            border-color: #33d9b2;
+        
+        .card-header::before {
+            content: "";
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(
+                to bottom right,
+                rgba(255, 255, 255, 0.3),
+                rgba(255, 255, 255, 0)
+            );
+            transform: rotate(30deg);
+            pointer-events: none;
         }
-        .btn-primary:hover {
-            background-color: #28a58c;
-            border-color: #28a58c;
+        
+        .card-header h1 {
+            font-weight: 700;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            position: relative;
         }
+        
+        .form-label {
+            font-weight: 600;
+            color: var(--dark-color);
+            margin-bottom: 0.5rem;
+        }
+        
         .form-control {
-            border-radius: 10px;
+            border-radius: 12px;
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            transition: all 0.3s ease;
+            background-color: rgba(255, 255, 255, 0.8);
         }
+        
+        .form-control:focus {
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 0.25rem rgba(58, 123, 213, 0.25);
+            background-color: white;
+        }
+        
+        .input-group-text {
+            background-color: var(--accent-color);
+            color: white;
+            border: none;
+            border-radius: 12px 0 0 12px;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(to right, var(--accent-color), var(--dark-color));
+            border: none;
+            border-radius: 12px;
+            padding: 12px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(58, 123, 213, 0.3);
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(58, 123, 213, 0.4);
+        }
+        
+        .btn-primary:active {
+            transform: translateY(0);
+        }
+        
         .alert {
-            font-size: 1.2rem;
+            border-radius: 12px;
+            font-weight: 500;
+            border: none;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .rain-icon {
+            animation: float 3s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        .particles {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+        
+        .particle {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.5);
+            border-radius: 50%;
+            animation: fall linear infinite;
+        }
+        
+        @keyframes fall {
+            to { transform: translateY(100vh); }
+        }
+        
+        @media (max-width: 768px) {
+            .card-header h1 {
+                font-size: 1.8rem;
+            }
+            
+            .form-control {
+                padding: 10px 12px;
+            }
+        }
+        
+        /* Glow effect for prediction */
+        .prediction-glow {
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+        
+        @keyframes glow {
+            from {
+                box-shadow: 0 0 10px rgba(58, 123, 213, 0.5);
+            }
+            to {
+                box-shadow: 0 0 20px rgba(58, 123, 213, 0.8);
+            }
+        }
+        
+        /* Floating labels effect */
+        .form-floating > label {
+            transition: all 0.3s ease;
         }
     </style>
 </head>
 <body>
+    <div class="particles" id="particles-js"></div>
+    
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-lg-8 col-md-10">
-                <div class="card shadow-lg">
-                    <div class="card-header text-center bg-primary text-white">
-                        <h1><i class="fas fa-cloud-rain"></i> Rainfall Prediction Tool</h1>
+                <div class="card shadow-lg animate__animated animate__fadeInUp">
+                    <div class="card-header text-center text-white">
+                        <h1><i class="fas fa-cloud-rain rain-icon me-2"></i> Rainfall Prediction Tool</h1>
+                        <p class="mb-0">Enter weather parameters to predict rainfall probability</p>
                     </div>
-                    <div class="card-body">
+                    <div class="card-body p-4">
                         <form method="POST" action="/" class="needs-validation" novalidate>
-                            <div class="form-row">
-                                <div class="col-md-6 mb-3">
-                                    <label for="pressure"><i class="fas fa-tachometer-alt"></i> Pressure (hPa)</label>
-                                    <input type="number" class="form-control" id="pressure" name="pressure" placeholder="Enter pressure" required>
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <label for="pressure" class="form-label"><i class="fas fa-tachometer-alt me-2"></i>Pressure (hPa)</label>
+                                    <div class="input-group">
+                                        <input type="number" class="form-control" id="pressure" name="pressure" placeholder="1013" required>
+                                    </div>
                                     <div class="invalid-feedback">
                                         Please provide a valid pressure.
                                     </div>
                                 </div>
-                                <div class="col-md-6 mb-3">
-                                    <label for="maxtemp"><i class="fas fa-temperature-high"></i> Max Temperature (&#8451;)</label>
-                                    <input type="number" class="form-control" id="maxtemp" name="maxtemp" placeholder="Enter max temperature" required>
+                                
+                                <div class="col-md-6">
+                                    <label for="maxtemp" class="form-label"><i class="fas fa-temperature-high me-2"></i>Max Temperature (°C)</label>
+                                    <div class="input-group">
+                                        <input type="number" class="form-control" id="maxtemp" name="maxtemp" placeholder="30" required>
+                                    </div>
                                     <div class="invalid-feedback">
                                         Please provide a valid max temperature.
                                     </div>
                                 </div>
-                            </div>
-                            <div class="form-row">
-                                <div class="col-md-6 mb-3">
-                                    <label for="temperature"><i class="fas fa-thermometer-half"></i> Temperature (&#8451;)</label>
-                                    <input type="number" class="form-control" id="temperature" name="temperature" placeholder="Enter temperature" required>
+                                
+                                <div class="col-md-6">
+                                    <label for="temperature" class="form-label"><i class="fas fa-thermometer-half me-2"></i>Temperature (°C)</label>
+                                    <div class="input-group">
+                                        <input type="number" class="form-control" id="temperature" name="temperature" placeholder="25" required>
+                                    </div>
                                     <div class="invalid-feedback">
                                         Please provide a valid temperature.
                                     </div>
                                 </div>
-                                <div class="col-md-6 mb-3">
-                                    <label for="mintemp"><i class="fas fa-temperature-low"></i> Min Temperature (&#8451;)</label>
-                                    <input type="number" class="form-control" id="mintemp" name="mintemp" placeholder="Enter min temperature" required>
+                                
+                                <div class="col-md-6">
+                                    <label for="mintemp" class="form-label"><i class="fas fa-temperature-low me-2"></i>Min Temperature (°C)</label>
+                                    <div class="input-group">
+                                        <input type="number" class="form-control" id="mintemp" name="mintemp" placeholder="20" required>
+                                    </div>
                                     <div class="invalid-feedback">
                                         Please provide a valid min temperature.
                                     </div>
                                 </div>
-                            </div>
-                            <div class="form-row">
-                                <div class="col-md-6 mb-3">
-                                    <label for="dewpoint"><i class="fas fa-tint"></i> Dew Point (&#8451;)</label>
-                                    <input type="number" class="form-control" id="dewpoint" name="dewpoint" placeholder="Enter dew point" required>
+                                
+                                <div class="col-md-6">
+                                    <label for="dewpoint" class="form-label"><i class="fas fa-tint me-2"></i>Dew Point (°C)</label>
+                                    <div class="input-group">
+                                        <input type="number" class="form-control" id="dewpoint" name="dewpoint" placeholder="15" required>
+                                    </div>
                                     <div class="invalid-feedback">
                                         Please provide a valid dew point.
                                     </div>
                                 </div>
-                                <div class="col-md-6 mb-3">
-                                    <label for="humidity"><i class="fas fa-water"></i> Humidity (%)</label>
-                                    <input type="number" class="form-control" id="humidity" name="humidity" placeholder="Enter humidity" required>
+                                
+                                <div class="col-md-6">
+                                    <label for="humidity" class="form-label"><i class="fas fa-water me-2"></i>Humidity (%)</label>
+                                    <div class="input-group">
+                                        <input type="number" class="form-control" id="humidity" name="humidity" placeholder="60" required>
+                                    </div>
                                     <div class="invalid-feedback">
                                         Please provide a valid humidity.
                                     </div>
                                 </div>
-                            </div>
-                            <div class="form-row">
-                                <div class="col-md-6 mb-3">
-                                    <label for="cloud"><i class="fas fa-cloud"></i> Cloud Cover (%)</label>
-                                    <input type="number" class="form-control" id="cloud" name="cloud" placeholder="Enter cloud cover" required>
+                                
+                                <div class="col-md-6">
+                                    <label for="cloud" class="form-label"><i class="fas fa-cloud me-2"></i>Cloud Cover (%)</label>
+                                    <div class="input-group">
+                                        <input type="number" class="form-control" id="cloud" name="cloud" placeholder="50" required>
+                                    </div>
                                     <div class="invalid-feedback">
                                         Please provide a valid cloud cover.
                                     </div>
                                 </div>
-                                <div class="col-md-6 mb-3">
-                                    <label for="sunshine"><i class="fas fa-sun"></i> Sunshine (hours)</label>
-                                    <input type="number" class="form-control" id="sunshine" name="sunshine" placeholder="Enter sunshine hours" required>
+                                
+                                <div class="col-md-6">
+                                    <label for="sunshine" class="form-label"><i class="fas fa-sun me-2"></i>Sunshine (hours)</label>
+                                    <div class="input-group">
+                                        <input type="number" class="form-control" id="sunshine" name="sunshine" placeholder="6" required>
+                                    </div>
                                     <div class="invalid-feedback">
                                         Please provide a valid sunshine duration.
                                     </div>
                                 </div>
-                            </div>
-                            <div class="form-row">
-                                <div class="col-md-6 mb-3">
-                                    <label for="winddirection"><i class="fas fa-compass"></i> Wind Direction (&#176;)</label>
-                                    <input type="number" class="form-control" id="winddirection" name="winddirection" placeholder="Enter wind direction" required>
+                                
+                                <div class="col-md-6">
+                                    <label for="winddirection" class="form-label"><i class="fas fa-compass me-2"></i>Wind Direction (°)</label>
+                                    <div class="input-group">
+                                        <input type="number" class="form-control" id="winddirection" name="winddirection" placeholder="180" required>
+                                    </div>
                                     <div class="invalid-feedback">
                                         Please provide a valid wind direction.
                                     </div>
                                 </div>
-                                <div class="col-md-6 mb-3">
-                                    <label for="windspeed"><i class="fas fa-wind"></i> Wind Speed (km/h)</label>
-                                    <input type="number" class="form-control" id="windspeed" name="windspeed" placeholder="Enter wind speed" required>
+                                
+                                <div class="col-md-6">
+                                    <label for="windspeed" class="form-label"><i class="fas fa-wind me-2"></i>Wind Speed (km/h)</label>
+                                    <div class="input-group">
+                                        <input type="number" class="form-control" id="windspeed" name="windspeed" placeholder="10" required>
+                                    </div>
                                     <div class="invalid-feedback">
                                         Please provide a valid wind speed.
                                     </div>
                                 </div>
                             </div>
-                            <button class="btn btn-primary btn-block" type="submit"><i class="fas fa-cloud-showers-heavy"></i> Predict Rainfall</button>
+                            
+                            <div class="d-grid mt-4">
+                                <button class="btn btn-primary btn-lg" type="submit">
+                                    <i class="fas fa-cloud-showers-heavy me-2"></i> Predict Rainfall
+                                </button>
+                            </div>
                         </form>
+                        
                         {% if prediction %}
-                            <div class="alert alert-info mt-4 text-center" role="alert">
-                                <strong>Prediction:</strong> {{ prediction }}
+                            <div class="alert alert-info mt-4 text-center prediction-glow animate__animated animate__fadeIn" role="alert">
+                                <h4 class="alert-heading mb-3"><i class="fas fa-chart-line me-2"></i> Prediction Result</h4>
+                                <p class="mb-0 fs-5 fw-bold">{{ prediction }}</p>
                             </div>
                         {% endif %}
+                    </div>
+                    <div class="card-footer text-center text-muted">
+                        <small>Powered by Machine Learning & Weather Data Analysis</small>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
+        // Form validation
         (function () {
             'use strict';
             window.addEventListener('load', function () {
@@ -164,6 +343,50 @@
                 });
             }, false);
         })();
+        
+        // Create floating particles
+        document.addEventListener('DOMContentLoaded', function() {
+            const particlesContainer = document.getElementById('particles-js');
+            const particleCount = 30;
+            
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.classList.add('particle');
+                
+                // Random size between 1px and 3px
+                const size = Math.random() * 2 + 1;
+                particle.style.width = `${size}px`;
+                particle.style.height = `${size}px`;
+                
+                // Random position
+                particle.style.left = `${Math.random() * 100}vw`;
+                particle.style.top = `${Math.random() * -100}px`;
+                
+                // Random animation duration between 10s and 20s
+                const duration = Math.random() * 10 + 10;
+                particle.style.animationDuration = `${duration}s`;
+                
+                // Random delay
+                particle.style.animationDelay = `${Math.random() * 5}s`;
+                
+                // Random opacity
+                particle.style.opacity = Math.random() * 0.5 + 0.1;
+                
+                particlesContainer.appendChild(particle);
+            }
+            
+            // Add ripple effect to form inputs
+            const inputs = document.querySelectorAll('.form-control');
+            inputs.forEach(input => {
+                input.addEventListener('focus', function() {
+                    this.parentElement.querySelector('.input-group-text').style.boxShadow = '0 0 0 0.2rem rgba(58, 123, 213, 0.25)';
+                });
+                
+                input.addEventListener('blur', function() {
+                    this.parentElement.querySelector('.input-group-text').style.boxShadow = 'none';
+                });
+            });
+        });
     </script>
 </body>
 </html>
